@@ -16,7 +16,7 @@ pipeline {
         stage("Testing") {
             steps {
                 echo "Test Runs"
-            
+
             }
         }
         stage("Build") {
@@ -43,14 +43,14 @@ pipeline {
         }
         stage("Deploy to Prod") {
             when {
-                expression { params.BRANCH_NAME == 'main' }
+                expression { params.BRANCH_NAME == 'master' }
             }
             steps {
                 input(message: "Do you want to proceed to PROD?", ok: "Proceed") // Approval step
 
                 // Deploy to PROD server after approval
                 deployToTomcat('43.204.103.54', 'admin', 'admin', 'http://43.204.103.54:8080/manager/text', '/boxfuse-java-maven-app', 'Prod')
-                
+
                 // Send Slack notification
                 slackSend(channel: 'cricket', message: "Deployment to PROD has been approved by manager.")
             }
